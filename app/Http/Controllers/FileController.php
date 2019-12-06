@@ -19,7 +19,7 @@ class FileController extends Controller
     public function convert(FileRequest $request)
     {
         try {
-            $response = $this->extractFile($request, 'file');
+            $response = $this->extractFile($request, 'file', $request->delimiter ?? ';');
 
         } catch (\Exception $exception) {
             $response = [
@@ -39,8 +39,8 @@ class FileController extends Controller
     public function process(ProcessRequest $request)
     {
         try {
-            $domestic = $this->extractFile($request, 'domestic');
-            $foreign = $this->extractFile($request, 'foreign');
+            $domestic = $this->extractFile($request, 'domestic', $request->delimiter['domestic'] ?? ';');
+            $foreign = $this->extractFile($request, 'foreign', $request->delimiter['foreign'] ?? ';');
 
             $processor = new Processor($domestic, $foreign, strtolower($request->input('identifier')), strtolower($request->input('matcher')));
 
@@ -61,11 +61,11 @@ class FileController extends Controller
      * @param string $attribute
      * @return array
      */
-    protected function extractFile($request, string $attribute)
+    protected function extractFile($request, string $attribute, string $delimiter)
     {
         $filename = $request->file($attribute)->getClientOriginalName(); 
         $path = Storage::disk('custom')->putFileAs('/csv', $request->file($attribute), $filename);
 
-        return (new File(public_path('uploads/' . $path), $request->delimiter ?? ';'))->getRecords();
+        return (new File(public_path('uploads/' . $path), $delimiter))->getRecords();
     }
 }
