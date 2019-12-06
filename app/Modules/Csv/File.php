@@ -19,24 +19,31 @@ class File
 
     protected $records;
 
-    public function __construct(string $file_path)
+    /**
+     * File construct.
+     *
+     * @param string $file_path
+     * @param string $delimiter
+     */
+    public function __construct(string $file_path, string $delimiter)
     {
         $this->file_path = $file_path;
 
-        $this->extractDataFromFile();
+        $this->extractDataFromFile($delimiter);
     }
 
     /**
      * Extract data from file path into an object
      *
+     * @param string $delimiter
      * @return void
      */
-    public function extractDataFromFile(): void
+    public function extractDataFromFile(string $delimiter = ';'): void
     {
         //load the CSV document from a stream
         $stream = fopen($this->file_path, 'r');
         $file = Reader::createFromStream($stream);
-        $file->setDelimiter(';');
+        $file->setDelimiter($delimiter);
         $file->setHeaderOffset(0);
 
         //build a statement

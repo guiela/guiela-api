@@ -66,6 +66,6 @@ class FileController extends Controller
         $filename = $request->file($attribute)->getClientOriginalName(); 
         $path = Storage::disk('custom')->putFileAs('/csv', $request->file($attribute), $filename);
 
-        return (new File(public_path('uploads/' . $path)))->getRecords();
+        return (new File(public_path('uploads/' . $path), $request->delimiter ?? ';'))->getRecords();
     }
 }
