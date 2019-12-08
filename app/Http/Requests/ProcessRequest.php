@@ -29,10 +29,10 @@ class ProcessRequest extends FormRequest
     public function rules()
     {
         return [
-            'domestic'      => ['required'],
-            'foreign'       => ['required'],
-            'identifier'    => ['required'],
-            'matcher'       => ['required'],
+            'domestic'      => ['required', 'mimes:csv,txt'],
+            'foreign'       => ['required', 'mimes:csv,txt'],
+            'identifier'    => ['required', 'string'],
+            'matcher'       => ['required', 'string'],
             'sum'           => ['nullable']
         ];
     }
